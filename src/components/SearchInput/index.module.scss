@@ -1,0 +1,26 @@
+.searchInput {
+  height: 30px;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgba(220, 220, 220, 0.4);
+  border-radius: 2px;
+  font-size: 16px;
+  padding-left: 5px;
+
+  &_input {
+    width: 100%;
+    height: 100%;
+  }
+
+  &_button {
+    width: 30px;
+    height: 100%;
+    cursor: pointer;
+
+    &_icon {
+      color: rgb(0, 128, 255);
+    }
+  }
+}

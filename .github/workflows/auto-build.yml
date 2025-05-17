@@ -24,3 +24,24 @@ jobs:
       
       - name: Build application  # 构建应用
         run: pnpm build
+
+  # 这是 rollback 任务，仅在 build 任务失败时执行
+  # 若 build 任务成功，则该任务不会被执行
+  rollback:
+    needs: build
+    if: ${{ failure() }}  # 仅在 build 任务失败时执行
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Revert last commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git revert --no-commit HEAD  # 撤销最近一次提交
+          git commit -m "Revert: $(git log -1 --pretty=%B)"  # 使用原提交信息作为回滚说明
+          git push origin main  # 推送到 main 分支

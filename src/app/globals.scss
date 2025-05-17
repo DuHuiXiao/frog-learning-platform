@@ -5,6 +5,18 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: clamp(
+    10px,           /* 最小值 */
+    0.8333vw,       /* 动态值 (16px @ 1920px) */
+    20px            /* 最大值 */
+  );
+}
+
+html, body {
+  transition: font-size 0.2s ease-in-out;
+}
+
 ul, li, ol, dl, dt {
   list-style: none;
 }

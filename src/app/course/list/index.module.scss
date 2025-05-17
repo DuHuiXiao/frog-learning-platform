@@ -55,6 +55,7 @@
           // 多行文本溢出
           display: -webkit-box;
           -webkit-line-clamp: 4;
+          line-clamp: 4;
           -webkit-box-orient: vertical;
           text-overflow: ellipsis;
           overflow: hidden;

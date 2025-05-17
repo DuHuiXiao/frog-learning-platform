@@ -15,7 +15,7 @@ export default function MainHeader() {
   },
   {
     name: '教师',
-    path: '/teacher'
+    path: '/teacher/list'
   },
   {
     name: '资讯',

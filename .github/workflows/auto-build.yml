@@ -1,0 +1,26 @@
+name: Auto Build  # 工作流名称
+
+on:
+  push:
+    branches:
+      - main    # 只有 main 分支的 push 事件会触发工作流
+
+# 工作流的任务
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用 GitHub 托管的 Ubuntu 环境
+    
+    steps:
+      - name: Checkout code  # 检出代码
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js  # 设置 Node.js 环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      
+      - name: Install dependencies  # 安装依赖
+        run: npm i -g pnpm && pnpm install
+      
+      - name: Build application  # 构建应用
+        run: pnpm run build

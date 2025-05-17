@@ -1,9 +1,9 @@
 'use client'
 import styles from '@/components/MainHeader/index.module.scss'
 import SearchInput from '../SearchInput'
-import { Avatar } from 'antd';
 import { useState } from 'react'
 import Button from '../Button';
+import Avatar from '../Avatar';
 export default function MainHeader() {
   const navList = [{
     name: '首页',

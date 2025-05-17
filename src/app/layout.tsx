@@ -1,13 +1,15 @@
-import '@/app/globals.css';
+import '@/app/globals.scss';
 import styles from '@/app/layout.module.scss'
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import MainHeader from '@/components/MainHeader';
+import Config from '@/components/Config';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="zh-CN">
       <title>Frog学习平台 - 一站式在线学习平台</title>
@@ -19,6 +21,7 @@ export default function RootLayout({
         <AntdRegistry>
           <MainHeader />
           <main className={styles.body_main}>
+            <Config />
             {children}
           </main>
         </AntdRegistry>

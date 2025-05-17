@@ -5,7 +5,7 @@ import MainHeader from '@/components/MainHeader';
 import Config from '@/components/Config';
 
 export default function RootLayout({
-  children,sssaaa
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {

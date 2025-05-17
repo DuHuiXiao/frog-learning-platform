@@ -29,19 +29,35 @@ jobs:
   # 若 build 任务成功，则该任务不会被执行
   rollback:
     needs: build
-    if: ${{ failure() }}  # 仅在 build 任务失败时执行
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           ref: main
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}  # 使用有写入权限的 token
       
-      - name: Revert last commit
+      - name: 获取上一个提交哈希
+        id: previous_commit
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git revert --no-commit HEAD  # 撤销最近一次提交
-          git commit -m "Revert: $(git log -1 --pretty=%B)"  # 使用原提交信息作为回滚说明
-          git push origin main  # 推送到 main 分支
+          PREVIOUS_COMMIT=$(git rev-parse HEAD~1)
+          echo "previous_commit=$PREVIOUS_COMMIT" >> $GITHUB_ENV
+      
+      - name: 创建回滚分支
+        run: |
+          git checkout -b rollback-${{ github.run_number }}
+          git reset --hard ${{ env.previous_commit }}  # 回退到上一个提交
+          git push -f origin rollback-${{ github.run_number }}  # 强制推送到新分支
+      
+      - name: 创建 Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          branch: rollback-${{ github.run_number }}
+          base: main
+          title: "Rollback: ${{ github.event.head_commit.message }}"
+          body: |
+            自动回滚因构建失败触发。
+            回滚到提交: ${{ env.previous_commit }}
+          reviewers: DuHuiXiao  # 指定审核人

@@ -4,6 +4,8 @@ import SearchInput from '../SearchInput'
 import { useEffect, useState } from 'react'
 import Button from '../Button';
 import Avatar from '../Avatar';
+import Link from 'next/link';
+
 export default function MainHeader() {
   const navList = [{
     name: '首页',
@@ -19,19 +21,20 @@ export default function MainHeader() {
   },
   {
     name: '资讯',
-    path: '/news'
+    path: '/news/list'
   }]
   const [value] = useState('')
   const [isClient, setIsClient] = useState(false)
+  const [path, setPath] = useState('/404')
 
   useEffect(()=>{
     setIsClient(true)
+    setPath(location.pathname)
   },[])
 
-  function isNavActive(path:string){
+  function isNavActive(linkPath:string){
     if(!isClient)return false
-    const currentPath = window.location.pathname
-    return currentPath === path
+    return linkPath === path
   }
 
   return (
@@ -42,10 +45,13 @@ export default function MainHeader() {
           <ul className={styles.header_content_nav_ul}>
             {navList.map((item) => (
               <li key={item.name} className={styles.header_content_nav_ul_li}>
-                <a href={item.path}
+                <Link href={item.path}
+                passHref={true}
+                prefetch={true}
+                onClick={() => setPath(item.path)}
                 className={`${isNavActive(item.path) ? styles.header_content_nav_ul_li_active : ''}`}>
                   {item.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

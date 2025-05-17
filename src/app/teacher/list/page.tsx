@@ -8,7 +8,7 @@ export default function TeacherList() {
       <div className={styles.teacherList}>
           <div className={styles.teacherList_list}>
               {list.map((_, index) => (
-                <div className={styles.teacherList_list_item}>
+                <div key={index} className={styles.teacherList_list_item}>
                   {/* 上半部分 */}
                   <section className={styles.teacherList_list_item_top}>
                     {/* 左侧头像部分 */}

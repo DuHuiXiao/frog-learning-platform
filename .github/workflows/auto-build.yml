@@ -23,4 +23,4 @@ jobs:
         run: npm i -g pnpm && pnpm install
       
       - name: Build application  # 构建应用
-        run: pnpm run build
+        run: pnpm build

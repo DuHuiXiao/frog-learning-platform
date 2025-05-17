@@ -37,6 +37,7 @@ jobs:
         with:
           ref: main
           token: ${{ secrets.PAT_TOKEN }}  # 使用有写入权限的 token
+          fetch - depth: 0 # 获取完整提交历史，确保能解析 HEAD~1
       
       - name: 检查仓库是否准备就绪
         run: |

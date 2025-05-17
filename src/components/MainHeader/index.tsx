@@ -21,7 +21,7 @@ export default function MainHeader() {
     name: '资讯',
     path: '/news'
   }]
-  const [value, setValue] = useState('')
+  const [value] = useState('')
 
   return (
     <div className={styles.header}>

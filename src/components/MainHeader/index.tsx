@@ -1,7 +1,7 @@
 'use client'
 import styles from '@/components/MainHeader/index.module.scss'
 import SearchInput from '../SearchInput'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '../Button';
 import Avatar from '../Avatar';
 export default function MainHeader() {
@@ -22,6 +22,17 @@ export default function MainHeader() {
     path: '/news'
   }]
   const [value] = useState('')
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(()=>{
+    setIsClient(true)
+  },[])
+
+  function isNavActive(path:string){
+    if(!isClient)return false
+    const currentPath = window.location.pathname
+    return currentPath === path
+  }
 
   return (
     <div className={styles.header}>
@@ -31,7 +42,10 @@ export default function MainHeader() {
           <ul className={styles.header_content_nav_ul}>
             {navList.map((item) => (
               <li key={item.name} className={styles.header_content_nav_ul_li}>
-                <a href={item.path}>{item.name}</a>
+                <a href={item.path}
+                className={`${isNavActive(item.path) ? styles.header_content_nav_ul_li_active : ''}`}>
+                  {item.name}
+                </a>
               </li>
             ))}
           </ul>

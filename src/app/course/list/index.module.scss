@@ -2,13 +2,65 @@
   display: flex;
   flex-wrap: wrap;
   width: 1400px;
-  background-color: rebeccapurple;
   justify-content: center;
   gap: 20px;
 
   &_item {
     width: 690px;
-    height: 50px;
-    margin-top: 20px;
+    height: 180px;
+    display: flex;
+    margin-top: 30px;
+
+    &_left {
+      width: 300px;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &_img {
+        width: 240px;
+        height: 180px;
+        border-radius: 5px;
+        background-size: cover;
+      }
+    }
+
+    &_right {
+      width: 390px;
+      height: 180px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+
+      &_container {
+        width: 390px;
+        height: 180px;
+
+        &_title {
+          width: 390px;
+          height: 40px;
+          font-size: 20px;
+          font-weight: bold;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        &_desc {
+          width: 390px;
+          height: 90px;
+          margin-bottom: 10px;
+          font-size: 16px;
+          // 多行文本溢出
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+        
+      }
+    }
   }
 }

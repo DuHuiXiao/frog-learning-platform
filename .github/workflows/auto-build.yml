@@ -38,17 +38,46 @@ jobs:
           ref: main
           token: ${{ secrets.PAT_TOKEN }}  # 使用有写入权限的 token
       
+      - name: 检查仓库是否准备就绪
+        run: |
+          # 这里通过检查是否存在常见的项目文件（如 package.json ）来判断仓库是否就绪
+          if [ -f "package.json" ]; then
+            echo "仓库准备就绪"
+          else
+            echo "仓库未准备就绪，等待重试"
+            # 最多重试 5 次，每次间隔 2 秒
+            for i in {1..5}; do
+              sleep 2
+              if [ -f "package.json" ]; then
+                echo "仓库已准备就绪"
+                break
+              fi
+            done
+            if [! -f "package.json" ]; then
+              echo "仓库始终未准备就绪，终止任务"
+              exit 1
+            fi
+          fi
+      
       - name: 获取上一个提交哈希
         id: previous_commit
         run: |
-          PREVIOUS_COMMIT=$(git rev-parse HEAD~1)
+          PREVIOUS_COMMIT=$(git rev-parse HEAD~1 || echo "无法解析上一个提交，使用当前提交")
           echo "previous_commit=$PREVIOUS_COMMIT" >> $GITHUB_ENV
       
-      - name: 创建回滚分支
+      - name: 暂存所有修改
+        run: git stash --all
+      
+      - name: 检查并创建回滚分支
         run: |
-          git checkout -b rollback-${{ github.run_number }}
-          git reset --hard ${{ env.previous_commit }}  # 回退到上一个提交
-          git push -f origin rollback-${{ github.run_number }}  # 强制推送到新分支
+          BRANCH_NAME="rollback-${{ github.run_number }}"
+          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
+            echo "回滚分支 $BRANCH_NAME 已存在，跳过创建"
+          else
+            git checkout -b $BRANCH_NAME
+            git reset --hard ${{ env.previous_commit }}  # 回退到上一个提交
+            git push origin $BRANCH_NAME
+          fi
       
       - name: 创建 Pull Request
         uses: peter-evans/create-pull-request@v4
@@ -58,6 +87,11 @@ jobs:
           base: main
           title: "Rollback: ${{ github.event.head_commit.message }}"
           body: |
-            自动回滚因构建失败触发。
-            回滚到提交: ${{ env.previous_commit }}
+            由于构建失败，自动触发回滚操作。
+            此次回滚将代码恢复到提交 ${{ env.previous_commit }} 状态。
+            可能影响：若该提交之后有其他依赖此版本的操作，可能需要重新配置或执行相关步骤。
+            请审核确认后合并此 Pull Request 以完成回滚。
           reviewers: DuHuiXiao  # 指定审核人
+      
+      - name: 恢复暂存修改（可选，根据实际需求决定是否恢复 ）
+        run: git stash pop || echo "没有暂存的修改可恢复"

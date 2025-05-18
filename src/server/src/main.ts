@@ -11,6 +11,10 @@ async function bootstrap() {
   app.use(loggerMiddleware);
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.enableCors({
+    origin: '*'
+  })
   await app.listen(port);
   console.log(`nest 服务器已启动，监听端口： ${port}`);
 }

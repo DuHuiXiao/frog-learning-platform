@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form enctype="multipart/form-data" action="http://localhost:3000/file" method="post">
+    <input type="file" name="file">
+    <button type="submit">Upload</button>
+  </form>
+
+
+  <!-- <script>
+    const input = document.querySelector('input[type="file"]');
+    const button = document.querySelector('button');
+    let file;
+
+    button.addEventListener('click', async () => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await fetch('http://localhost:3000/file', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      console.log(data);
+    });
+
+    input.addEventListener('change', () => {
+      file = input.files[0];
+      console.log(file);
+    });
+  </script> -->
+</body>
+</html>
